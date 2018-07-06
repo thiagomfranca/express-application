@@ -1,0 +1,6 @@
+node_modules
+src
+.babelrc
+.editorconfig
+index.js
+package-lock.json
