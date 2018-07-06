@@ -3,6 +3,10 @@
   "version": "1.0.5",
   "description": "The easy way to make robust apis",
   "homepage": "https://github.com/thiagomfranca/express-application",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thiagomfranca/express-application.git"
+  },
   "keywords": [
     "express",
     "node",

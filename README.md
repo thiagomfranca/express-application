@@ -100,6 +100,8 @@ export default class ExampleService {
 
 ## Release History
 
+* 1.0.5
+	* Keywords and github repo
 * 1.0.4
 	* Usage example
 * 1.0.3
