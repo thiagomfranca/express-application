@@ -1,6 +1,6 @@
 {
   "name": "express-application",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "The easy way to make robust apis",
   "homepage": "https://github.com/thiagomfranca/express-application",
   "keywords": [
@@ -17,7 +17,9 @@
   },
   "author": "Thiago França",
   "license": "ISC",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "aws-serverless-express": "^3.2.0",
     "body-parser": "^1.18.3",
