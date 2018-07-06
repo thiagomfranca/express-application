@@ -1,17 +1,22 @@
 {
   "name": "express-application",
   "version": "1.0.4",
-  "description": "Simple Express Application Bootstrap",
+  "description": "The easy way to make robust apis",
+  "keywords": [
+    "express",
+    "node",
+    "api",
+    "gateway",
+    "serverless"
+  ],
   "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel --ignore=node_modules,scripts,coverage,docs,test,.nyc_output ../express-application -d ./dist && cp -r node_modules ./dist/node_modules"
+    "build": "babel --ignore=node_modules ../express-application -d ./dist && cp -r node_modules ./dist/node_modules"
   },
   "author": "Thiago França",
   "license": "ISC",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "dependencies": {
     "aws-serverless-express": "^3.2.0",
     "body-parser": "^1.18.3",
