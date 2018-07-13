@@ -1,7 +1,8 @@
-import bugsnag from 'bugsnag';
-import express from 'express';
-import ExpressServiceDiscovery from './src/expressServiceDiscovery';
-import ExpressMiddlewares from './src/expressMiddlewares';
+import bugsnag from 'bugsnag'
+import express from 'express'
+import ExpressServiceDiscovery from './src/expressServiceDiscovery'
+import ExpressMiddlewares from './src/expressMiddlewares'
+import { ValidationError } from 'express-validation'
 
 const defaultOptions = {
   name: 'Project Name',
