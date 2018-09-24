@@ -2,7 +2,6 @@ import bugsnag from 'bugsnag'
 import express from 'express'
 import ExpressServiceDiscovery from './src/expressServiceDiscovery'
 import ExpressMiddlewares from './src/expressMiddlewares'
-import { ValidationError } from 'express-validation'
 
 const defaultOptions = {
   name: 'Project Name',
@@ -65,12 +64,12 @@ export default class ExpressApplication {
         bugsnag.notify(err)
       }
 
-      if (err instanceof ValidationError) {
-        return response.status(err.status).json(err)
+      if (err.hasOwnProperty('message') && err.message === 'validation error') {
+        return response.status(err.status).json(err);
       }
 
       if (registeredErrors.includes(err.name)) {
-        return response.status(err.errorCode || 400).json({ message: err.message })
+        return response.status(err.errorCode || 400).json({ message: err.message, code: err.errorCode });
       }
 
       return response.status(500).json({ message: 'Unexpected error.' })

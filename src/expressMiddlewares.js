@@ -38,7 +38,13 @@ export default class ExpressMiddlewares {
     if (this.isServerless) this.express.use(awsServerlessExpressMiddleware.eventContext())
     if (this.options.compression) this.express.use(compression())
 
-    this.express.use(bodyParser.json())
+    let jsonOpts = { limit: '1mb', extended: true }
+
+    if (this.options.bodyParser && this.options.bodyParser.json) {
+      jsonOpts = { ...jsonOpts, ...this.options.bodyParser.json }
+    }
+
+    this.express.use(bodyParser.json(jsonOpts))
     this.express.use(bodyParser.urlencoded({ extended: false, limit: '1mb' }))
 
     if (this.options.bugsnag.active
