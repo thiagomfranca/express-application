@@ -65,7 +65,7 @@ export default class ExampleService {
    * @param {*} router
    */
   constructor(router) {
-    router.get('/', this.get)
+    router.get('/', this.get.bind(this)) // or router.get('/', this.get) // without preserve context
   }
 
   /**
