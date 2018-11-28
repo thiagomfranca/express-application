@@ -73,7 +73,11 @@ export default class ExpressApplication {
         return response.status(errorCode).json({ message: err.message, code: errorCode });
       }
 
-      return response.status(500).json({ message: 'Unexpected error.' })
+      if (this.stage === 'production') {
+        return response.status(500).json({ message: 'Unexpected error.' })
+      } else {
+        throw err
+      }
     })
   }
 }
