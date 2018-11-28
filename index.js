@@ -69,7 +69,8 @@ export default class ExpressApplication {
       }
 
       if (registeredErrors.includes(err.name)) {
-        return response.status(err.errorCode || 400).json({ message: err.message, code: err.errorCode });
+        const errorCode = err.errorCode || 400
+        return response.status(errorCode).json({ message: err.message, code: errorCode });
       }
 
       return response.status(500).json({ message: 'Unexpected error.' })
