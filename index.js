@@ -1,23 +1,25 @@
 import bugsnag from 'bugsnag'
 import express from 'express'
+import { prop } from 'ramda'
 import ExpressServiceDiscovery from './src/expressServiceDiscovery'
 import ExpressMiddlewares from './src/expressMiddlewares'
 
 const defaultOptions = {
-  name: 'Project Name',
+  name: 'ExpressApplication API',
   port: 3000,
   services: {
     container: []
   },
-  environment: 'development',
-  serverless: false,
+  debug: false,
+  jsonSpaces: 4,
+  morgan: {
+    format: 'combined'
+  },
   bugsnag: {
-    active: false,
-    key: null
+    key: null,
+    releaseStage: 'development'
   },
-  cors: {
-    enable: true
-  },
+  cors: {},
   compression: true
 }
 
@@ -34,8 +36,6 @@ export default class ExpressApplication {
 
     this.express = app
     this.options = options
-    this.isServerless = options.serverless
-    this.stage = options.environment
 
     const middlewares = new ExpressMiddlewares(this)
     middlewares.config()
@@ -48,31 +48,35 @@ export default class ExpressApplication {
    * Init Application
    */
   init() {
-    if (!this.isServerless) {
-      this.express.listen(this.options.port, () => {
-        console.log(`${this.options.name} listen on ${this.options.port}`)
-      })
-    }
+    this.express.listen(this.options.port, () => {
+      console.log(`${this.options.name} listen on ${this.options.port}`)
+    })
   }
 
   /**
    * Error Handling
    */
   errorHandling(registeredErrors = []) {
-    this.express.use((err, request, response, next) => {
-      if (this.stage === 'production') {
-        bugsnag.notify(err)
+    this.express.use((err, request, response) => {
+      this.notify(err)
+
+      if (this.options.debug) console.trace(err)
+
+      if (err instanceof Error) {
+        return response.status(err.errorCode).json(err)
       }
 
-      if (err.hasOwnProperty('message') && err.message === 'validation error') {
-        return response.status(err.status).json(err);
-      }
-
-      if (registeredErrors.includes(err.name)) {
-        return response.status(err.errorCode || 400).json({ message: err.message, code: err.errorCode });
-      }
-
-      return response.status(500).json({ message: 'Unexpected error.' })
+      response.status(500).json({ message: 'unexpected error.' })
     })
+  }
+
+  /**
+   *
+   * @param {Object} err - Error throwed
+   */
+  notify(err) {
+    if (prop('key', this.options.bugsnag)) {
+      bugsnag.notify(err)
+    }
   }
 }

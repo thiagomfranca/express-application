@@ -1,6 +1,6 @@
 {
   "name": "express-application",
-  "version": "1.0.13",
+  "version": "2.0.0",
   "description": "The easy way to make robust apis",
   "homepage": "https://github.com/thiagomfranca/express-application",
   "repository": {
@@ -11,8 +11,8 @@
     "express",
     "node",
     "api",
-    "gateway",
-    "serverless"
+    "restful",
+    "rest"
   ],
   "main": "./dist/index.js",
   "scripts": {
@@ -25,20 +25,20 @@
     "dist"
   ],
   "dependencies": {
-    "aws-serverless-express": "^3.2.0",
     "body-parser": "^1.18.3",
     "bugsnag": "^2.4.3",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "helmet": "^3.12.1",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.1",
+    "ramda": "^0.26.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1"
   }
 }

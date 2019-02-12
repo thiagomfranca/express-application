@@ -1,9 +1,10 @@
-import awsServerlessExpressMiddleware from 'aws-serverless-express/middleware'
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import path from 'path'
+import { prop } from 'ramda'
 
 /**
  * @class ExpressMiddlewares
@@ -22,46 +23,44 @@ export default class ExpressMiddlewares {
    * Configure default middlewares
    */
   config() {
-    this.express.set('json spaces', 4)
+    this.express.set('json spaces', this.options.jsonSpaces)
 
-    const format = this.stage === 'development' ? 'dev' : 'combined'
+    const { format, ...morganOptions } = this.options.morgan
+    this.register(morgan, format, morganOptions)
 
-    this.express.use(morgan(format, {
-      stream: {
-        write: (message) => console.info(message),
-      },
-    }))
+    this.register(helmet, this.options.helmet || {})
 
-    this.express.use(helmet())
-
-    if (this.options.cors.enable) this.express.use(cors())
-    if (this.isServerless) this.express.use(awsServerlessExpressMiddleware.eventContext())
-    if (this.options.compression) this.express.use(compression())
+    if (Object.keys(this.options.cors)) this.register(cors, this.options.cors)
+    if (this.options.compression) this.register(compression)
 
     let jsonOpts = { limit: '1mb', extended: true }
 
-    if (this.options.bodyParser && this.options.bodyParser.json) {
+    if (prop('json', this.options.bodyParser)) {
       jsonOpts = { ...jsonOpts, ...this.options.bodyParser.json }
     }
 
-    this.express.use(bodyParser.json(jsonOpts))
-    this.express.use(bodyParser.urlencoded({ extended: false, limit: '1mb' }))
+    this.register(bodyParser.json, jsonOpts)
+    this.register(bodyParser.urlencoded, { extended: false, limit: '1mb' })
 
-    if (this.options.bugsnag.active
-      && this.options.bugsnag.key !== null
-    ) {
-      bugsnag.register(this.options.bugsnag.key)
+    if (prop('key', this.options.bugsnag)) {
+      const { key, reportOnlyKnowedErrors, ...bugsnagOptions } = this.options.bugsnag
 
-      this.express.use(bugsnag.requestHandler)
-      this.express.use(bugsnag.errorHandler)
+      bugsnag.register(key, bugsnagOptions)
+
+      this.register(bugsnag.requestHandler)
+      this.register(bugsnag.errorHandler)
     }
   }
 
   /**
-   * @param {String} middleware - Middleware name
-   * @param {Function} cb - Function callback
+   * @param {String|Function} middleware - Function or package name
+   * @param {Any} opts - Options to configure middleware
    */
-  register(middleware, cb) {
-    cb(this.express, require(middleware));
+  register(middleware, ...opts) {
+    let fn = middleware
+
+    if (typeof fn !== 'function') fn = require(path.resolve(middleware))
+
+    this.express.use(fn(...opts))
   }
 }
