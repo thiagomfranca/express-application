@@ -57,7 +57,7 @@ export default class ExpressApplication {
    * Error Handling
    */
   errorHandling() {
-    this.express.use((err, request, response) => {
+    this.express.use((err, request, response, next) => {
       this.notify(err)
 
       if (this.options.debug) console.log(err)
