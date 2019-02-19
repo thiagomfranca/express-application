@@ -86,6 +86,12 @@ export default class ExampleService {
 
 ## Release History
 
+* 2.0.2
+  * improve response error
+
+* 2.0.1
+  * fix error handler
+
 * 2.0.0
     * remove aws serverless express
     * remove errors register
