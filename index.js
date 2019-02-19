@@ -56,11 +56,11 @@ export default class ExpressApplication {
   /**
    * Error Handling
    */
-  errorHandling(registeredErrors = []) {
+  errorHandling() {
     this.express.use((err, request, response) => {
       this.notify(err)
 
-      if (this.options.debug) console.trace(err)
+      if (this.options.debug) console.log(err)
 
       if (err instanceof Error) {
         return response.status(err.errorCode).json(err)

@@ -24,10 +24,11 @@ const app = new ExpressApplication({
     container: ['./src/services'] // service discovery path list
   },
   port: process.env.PORT || 8000,
+  debug: process.env.NODE_ENV === 'development',
   environment: process.env.NODE_ENV || 'development',
   bugsnag: {
-    active: process.env.BUGSNAG || false,
-    key: process.env.BUGSNAG_KEY || null
+    key: process.env.BUGSNAG_KEY || null,
+	releaseStage: process.env.NODE_ENV
   },
   cors: {
     enable: process.env.CORS || true
@@ -37,19 +38,6 @@ const app = new ExpressApplication({
 
 // start to listen requests
 app.init()
-
-/**
- * errorHandling receive a list of errors name
- * only registered errors throw with specific status code and message
- * unregistered errors returns status code 500 and "Unexpected error" message
- */
-app.errorHandling([
-  'ResourceNotFound',
-  'ResourceDuplicated',
-  'AuthorizationHeaderNotFound',
-  'UnauthorizedAccess',
-  'ValidationException'
-])
 
 export default app
 ```
@@ -84,8 +72,6 @@ export default class ExampleService {
 
 [express](https://www.npmjs.com/package/express)
 
-[aws-serverless-express](https://www.npmjs.com/package/aws-serverless-express)
-
 [body-parser](https://www.npmjs.com/package/body-parser)
 
 [bugsnag](https://www.npmjs.com/package/bugsnag)
@@ -99,6 +85,13 @@ export default class ExampleService {
 [morgan](https://www.npmjs.com/package/morgan)
 
 ## Release History
+
+* 2.0.0
+    * remove aws serverless express
+    * remove errors register
+    * added debug flag
+    * remove active flag from bugsnag
+    * added release stage to bugsnag options
 
 * 1.0.5
 	* Keywords and github repo

@@ -43,7 +43,7 @@ export default class ExpressMiddlewares {
     this.register(bodyParser.urlencoded, { extended: false, limit: '1mb' })
 
     if (prop('key', this.options.bugsnag)) {
-      const { key, reportOnlyKnowedErrors, ...bugsnagOptions } = this.options.bugsnag
+      const { key, ...bugsnagOptions } = this.options.bugsnag
 
       bugsnag.register(key, bugsnagOptions)
 
