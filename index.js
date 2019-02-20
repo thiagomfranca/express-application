@@ -63,7 +63,7 @@ export default class ExpressApplication {
       if (this.options.debug) console.log(err)
 
       if (err instanceof Error) {
-        const { name, errorCode, message } = err
+        const { errorCode, name, message } = err
 
         return response.status(err.errorCode).json({ errorCode, name, message })
       }
