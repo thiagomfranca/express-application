@@ -38,6 +38,7 @@ const app = new ExpressApplication({
 
 // start to listen requests
 app.init()
+app.errorHandling()
 
 export default app
 ```
@@ -85,6 +86,12 @@ export default class ExampleService {
 [morgan](https://www.npmjs.com/package/morgan)
 
 ## Release History
+
+* 2.0.4
+  * npm cache in tgz file
+
+* 2.0.3
+  * problems with npm cache
 
 * 2.0.2
   * improve response error
