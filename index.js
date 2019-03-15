@@ -65,7 +65,7 @@ export default class ExpressApplication {
       return
     }
 
-    this.express.use(this.errorDispatcher)
+    this.express.use(this.errorDispatcher.bind(this))
   }
 
   /**
