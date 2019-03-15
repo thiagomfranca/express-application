@@ -20,7 +20,10 @@ const defaultOptions = {
     releaseStage: 'development'
   },
   cors: {},
-  compression: true
+  compression: true,
+  error: {
+    defaultErrorCode: 500
+  }
 }
 
 /**
@@ -56,20 +59,35 @@ export default class ExpressApplication {
   /**
    * Error Handling
    */
-  errorHandling() {
-    this.express.use((err, request, response, next) => {
-      this.notify(err)
+  errorHandling(cb = null) {
+    if (typeof cb === 'function') {
+      this.express.use(cb)
+      return
+    }
 
-      if (this.options.debug) console.log(err)
+    this.express.use(this.errorDispatcher)
+  }
 
-      if (err instanceof Error) {
-        const { errorCode, name, message } = err
+  /**
+   * Dispatch errors
+   * @param {*} err
+   * @param {*} request
+   * @param {*} response
+   * @param {*} next
+   */
+  errorDispatcher (err, request, response, next) {
+    this.notify(err)
 
-        return response.status(err.errorCode).json({ errorCode, name, message })
-      }
+    if (this.options.debug) console.log(err)
 
-      response.status(500).json({ message: 'unexpected error.' })
-    })
+    if (err instanceof Error) {
+      const { name, message } = err
+      const errorCode = err.errorCode || this.options.error.defaultErrorCode
+
+      return response.status(errorCode).json({ errorCode, name, message })
+    }
+
+    response.status(this.options.error.defaultErrorCode).json({ message: 'unexpected error.' })
   }
 
   /**
