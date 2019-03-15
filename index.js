@@ -1,6 +1,4 @@
-import bugsnag from 'bugsnag'
 import express from 'express'
-import { prop } from 'ramda'
 import ExpressServiceDiscovery from './src/expressServiceDiscovery'
 import ExpressMiddlewares from './src/expressMiddlewares'
 
@@ -96,11 +94,11 @@ export default class ExpressApplication {
    * @param {Object} err - Error throwed
    */
   async notify(err) {
-    return this.error
-      .channels
+    return this.error.channels
       .reduce((acc, channel) => {
         acc.push(channel.notify(err))
         return acc;
       }, [])
   }
 }
+
