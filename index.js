@@ -38,6 +38,7 @@ export default class ExpressApplication {
 
     this.express = app
     this.options = options
+    this.channels = options.error.channels || []
 
     const middlewares = new ExpressMiddlewares(this)
     middlewares.config()
@@ -75,30 +76,31 @@ export default class ExpressApplication {
    * @param {*} next
    */
   errorDispatcher (err, request, response, next) {
-    this.notify(err)
+    const metaData = err.metaData || {}
+    const errorCode = err.errorCode || this.options.error.defaultErrorCode
 
-    if (this.options.debug) console.log(err)
+    this.notify(err, metaData)
+    if (request.bugsnag) request.bugsnag.notify(err, { metaData })
+
+    if (this.options.debug) console.debug(err)
 
     if (err instanceof Error) {
       const { name, message } = err
-      const errorCode = err.errorCode || this.options.error.defaultErrorCode
-
       return response.status(errorCode).json({ errorCode, name, message })
     }
 
-    response.status(this.options.error.defaultErrorCode).json({ message: 'unexpected error.' })
+    response.status(errorCode).json({ message: 'unexpected error.' })
   }
 
   /**
    *
    * @param {Object} err - Error throwed
    */
-  async notify(err) {
-    return this.error.channels
+  notify(err, metaData = {}) {
+    return this.channels
       .reduce((acc, channel) => {
-        acc.push(channel.notify(err))
+        acc.push(channel.notify(err, { metaData }))
         return acc;
       }, [])
   }
 }
-
