@@ -1,6 +1,4 @@
-import bugsnag from 'bugsnag'
 import express from 'express'
-import { prop } from 'ramda'
 import ExpressServiceDiscovery from './src/expressServiceDiscovery'
 import ExpressMiddlewares from './src/expressMiddlewares'
 
@@ -22,7 +20,8 @@ const defaultOptions = {
   cors: {},
   compression: true,
   error: {
-    defaultErrorCode: 500
+    defaultErrorCode: 500,
+    channels: []
   }
 }
 
@@ -94,9 +93,12 @@ export default class ExpressApplication {
    *
    * @param {Object} err - Error throwed
    */
-  notify(err) {
-    if (prop('key', this.options.bugsnag)) {
-      bugsnag.notify(err)
-    }
+  async notify(err) {
+    return this.error.channels
+      .reduce((acc, channel) => {
+        acc.push(channel.notify(err))
+        return acc;
+      }, [])
   }
 }
+
