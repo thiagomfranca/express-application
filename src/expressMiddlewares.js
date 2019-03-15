@@ -1,3 +1,6 @@
+import bugsnag from '@bugsnag/js'
+import bugsnagExpress from '@bugsnag/plugin-express'
+
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import cors from 'cors'
@@ -42,13 +45,14 @@ export default class ExpressMiddlewares {
     this.register(bodyParser.json, jsonOpts)
     this.register(bodyParser.urlencoded, { extended: false, limit: '1mb' })
 
-    if (prop('key', this.options.bugsnag)) {
-      const { key, ...bugsnagOptions } = this.options.bugsnag
+    if (prop('apiKey', this.options.bugsnag)) {
+      const bugsnagClient = bugsnag(this.options.bugsnag)
+      bugsnagClient.use(bugsnagExpress)
+      const bugsnagMiddlewares = bugsnagClient.getPlugin('express')
+      this.register(bugsnagMiddlewares.requestHandler)
+      this.register(bugsnagMiddlewares.errorHandler)
 
-      bugsnag.register(key, bugsnagOptions)
-
-      this.register(bugsnag.requestHandler)
-      this.register(bugsnag.errorHandler)
+      this.app.error.channels.push(bugsnagClient)
     }
   }
 

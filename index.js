@@ -22,7 +22,8 @@ const defaultOptions = {
   cors: {},
   compression: true,
   error: {
-    defaultErrorCode: 500
+    defaultErrorCode: 500,
+    channels: []
   }
 }
 
@@ -94,9 +95,12 @@ export default class ExpressApplication {
    *
    * @param {Object} err - Error throwed
    */
-  notify(err) {
-    if (prop('key', this.options.bugsnag)) {
-      bugsnag.notify(err)
-    }
+  async notify(err) {
+    return this.error
+      .channels
+      .reduce((acc, channel) => {
+        acc.push(channel.notify(err))
+        return acc;
+      }, [])
   }
 }
