@@ -77,6 +77,7 @@ export default class ExpressApplication {
    */
   errorDispatcher (err, request, response, next) {
     const metaData = err.metaData || {}
+    const errorCode = err.errorCode || this.options.error.defaultErrorCode
 
     this.notify(err, metaData)
     if (request.bugsnag) request.bugsnag.notify(err, { metaData })
@@ -85,12 +86,10 @@ export default class ExpressApplication {
 
     if (err instanceof Error) {
       const { name, message } = err
-      const errorCode = err.errorCode || this.options.error.defaultErrorCode
-
       return response.status(errorCode).json({ errorCode, name, message })
     }
 
-    response.status(this.options.error.defaultErrorCode).json({ message: 'unexpected error.' })
+    response.status(errorCode).json({ message: 'unexpected error.' })
   }
 
   /**
