@@ -1,6 +1,6 @@
 {
   "name": "express-application",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "The easy way to make robust apis",
   "homepage": "https://github.com/thiagomfranca/express-application",
   "repository": {
