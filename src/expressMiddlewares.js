@@ -52,10 +52,8 @@ export default class ExpressMiddlewares {
       bugsnagClient.use(bugsnagExpress)
 
       const bugsnagMiddlewares = bugsnagClient.getPlugin('express')
-      this.register(bugsnagMiddlewares.requestHandler)
-      this.register(bugsnagMiddlewares.errorHandler)
-
-      this.app.error.channels.push(bugsnagClient)
+      this.register(() => bugsnagMiddlewares.requestHandler)
+      this.register(() => bugsnagMiddlewares.errorHandler)
     }
   }
 
