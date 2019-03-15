@@ -45,9 +45,12 @@ export default class ExpressMiddlewares {
     this.register(bodyParser.json, jsonOpts)
     this.register(bodyParser.urlencoded, { extended: false, limit: '1mb' })
 
-    if (prop('apiKey', this.options.bugsnag)) {
-      const bugsnagClient = bugsnag(this.options.bugsnag)
+    if (prop('key', this.options.bugsnag)) {
+      const { key, ...bugsnagOptions } = this.options.bugsnag
+
+      const bugsnagClient = bugsnag({ apiKey: key, ...bugsnagOptions })
       bugsnagClient.use(bugsnagExpress)
+
       const bugsnagMiddlewares = bugsnagClient.getPlugin('express')
       this.register(bugsnagMiddlewares.requestHandler)
       this.register(bugsnagMiddlewares.errorHandler)
