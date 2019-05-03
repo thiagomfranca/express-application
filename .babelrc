@@ -1,10 +1,27 @@
+// {
+//   "presets": ["es2015", "stage-2"],
+//   "plugins": [
+//     ["transform-runtime", {
+//       "polyfill": false,
+//       "regenerator": true
+//     }]
+//   ],
+//   "sourceMaps": true,
+//   "retainLines": true
+// }
+
 {
-  "presets": ["es2015", "stage-2"],
+  "presets": [[
+    "@babel/preset-env", {
+      "useBuiltIns": "entry"
+    }
+  ]],
   "plugins": [
-    ["transform-runtime", {
-      "polyfill": false,
-      "regenerator": true
-    }]
+    ["@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ]
   ],
   "sourceMaps": true,
   "retainLines": true

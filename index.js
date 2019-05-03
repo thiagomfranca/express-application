@@ -42,15 +42,15 @@ export default class ExpressApplication {
 
     const middlewares = new ExpressMiddlewares(this)
     middlewares.config()
-
-    const serviceDiscovery = new ExpressServiceDiscovery(this.express)
-    serviceDiscovery.discovery(options.services.container)
   }
 
   /**
    * Init Application
    */
   init() {
+    const serviceDiscovery = new ExpressServiceDiscovery(this.express)
+    serviceDiscovery.discovery(this.options.services.container)
+
     this.express.listen(this.options.port, () => {
       console.log(`${this.options.name} listen on ${this.options.port}`)
     })
