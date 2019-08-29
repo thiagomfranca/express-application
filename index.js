@@ -98,9 +98,6 @@ export default class ExpressApplication {
    */
   notify(err, metaData = {}) {
     return this.channels
-      .reduce((acc, channel) => {
-        acc.push(channel.notify(err, { metaData }))
-        return acc;
-      }, [])
+      .every(channel => channel.notify(err, { metaData }))
   }
 }
