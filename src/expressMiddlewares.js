@@ -5,9 +5,9 @@ import bodyParser from 'body-parser'
 import compression from 'compression'
 import cors from 'cors'
 import helmet from 'helmet'
+import csp from 'helmet-csp'
 import morgan from 'morgan'
 import path from 'path'
-import { prop } from 'ramda'
 
 /**
  * @class ExpressMiddlewares
@@ -31,6 +31,7 @@ export default class ExpressMiddlewares {
     const { format, ...morganOptions } = this.options.morgan
     this.register(morgan, format, morganOptions)
 
+    if (this.options.csp.hasOwnProperty('directives')) this.register(csp, this.options.csp)
     this.register(helmet, this.options.helmet || {})
 
     if (Object.keys(this.options.cors)) this.register(cors, this.options.cors)
@@ -38,14 +39,14 @@ export default class ExpressMiddlewares {
 
     let jsonOpts = { limit: '1mb', extended: true }
 
-    if (prop('json', this.options.bodyParser)) {
+    if (this.options.bodyParser.hasOwnProperty('json')) {
       jsonOpts = { ...jsonOpts, ...this.options.bodyParser.json }
     }
 
     this.register(bodyParser.json, jsonOpts)
     this.register(bodyParser.urlencoded, { extended: false, limit: '1mb' })
 
-    if (prop('key', this.options.bugsnag)) {
+    if (this.options.bugsnag.hasOwnProperty('key')) {
       const { key, ...bugsnagOptions } = this.options.bugsnag
 
       const bugsnagClient = bugsnag({ apiKey: key, ...bugsnagOptions })

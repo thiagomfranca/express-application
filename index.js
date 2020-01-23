@@ -1,10 +1,14 @@
+import fs from 'fs'
 import express from 'express'
+import spdy from 'spdy'
 import ExpressServiceDiscovery from './src/expressServiceDiscovery'
 import ExpressMiddlewares from './src/expressMiddlewares'
 
 const defaultOptions = {
   name: 'ExpressApplication API',
   port: 3000,
+  http2: {},
+  csp: {},
   services: {
     container: []
   },
@@ -51,9 +55,38 @@ export default class ExpressApplication {
     const serviceDiscovery = new ExpressServiceDiscovery(this.express)
     serviceDiscovery.discovery(this.options.services.container)
 
+    if (typeof this.options.http2 === 'object'
+      && process.versions.node.substring(0, 2) < 11 // spdy doesnt work with node >= 11
+      && (this.options.http2.key && this.options.http2.cert)) {
+      return this.createHttp2Server()
+    }
+
     this.express.listen(this.options.port, () => {
       console.log(`${this.options.name} listen on ${this.options.port}`)
     })
+  }
+
+  /**
+   *
+   */
+  createHttp2Server () {
+    const { http2: { key, cert } } = this.options
+
+    spdy
+      .createServer({
+        key: fs.existsSync(key) ? fs.readFileSync(key) : key,
+        cert: fs.existsSync(cert) ? fs.readFileSync(cert) : cert
+      }, this.express).listen(
+        this.options.port,
+        error => {
+          if (error) {
+            console.error(error)
+            return process.exit(1)
+          }
+
+          console.log(`${this.options.name} listen on ${this.options.port} with HTTP/2 support`)
+        }
+      )
   }
 
   /**
