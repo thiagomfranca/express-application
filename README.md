@@ -33,7 +33,19 @@ const app = new ExpressApplication({
   cors: {
     enable: process.env.CORS || true
   },
-  compression: process.env.COMPRESSION || true
+  compression: process.env.COMPRESSION || true,
+  morgan: {
+	format: 'combined' // default is combined
+  },
+  http2: { // only works in HTTPS
+	key: '-----BEGIN PRIVATE KEY-----\nMIIEvQIB...', // path or string with private key
+	cert: '-----BEGIN CERTIFICATE-----\nMIIDqDCCApAC' // path or string with certificate
+  },
+  csp: { // all configurations and directives from helmet-csp
+	directives: {
+		defaultSrc: ["'self'"]
+	}
+  }
 })
 
 // start to listen requests
@@ -85,7 +97,16 @@ export default class ExampleService {
 
 [morgan](https://www.npmjs.com/package/morgan)
 
+[spdy](https://www.npmjs.com/package/spdy)
+
+[helmet-csp](https://www.npmjs.com/package/helmet-csp)
+
 ## Release History
+
+* 2.2.0
+  * add http/2 support using spdy module
+  * add csp using helmet content security policy
+  * upgrade packs
 
 * 2.0.4
   * npm cache in tgz file
