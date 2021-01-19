@@ -14,28 +14,42 @@ export default class ExpressServiceDiscovery {
   }
 
   /**
+   * Read all files from a directory in recursive mode.
+   * @param {Array<string>} dir Files path
+   */
+  recursiveRead(dir) {
+    var results = []
+    var list = fs.readdirSync(dir);
+    // iterate in root folder and get files
+    list.forEach(function (file) {
+      file = dir + '/' + file;
+      var stat = fs.statSync(file)
+      if (stat && stat.isDirectory()) {
+        /* Recurse into a subdirectory */
+        results = results.concat(walk(file));
+      } else {
+        // We have a file path so push to results
+        results.push(module)
+      }
+    })
+    return results
+  }
+
+  /**
    * @param {Array} paths - Array of paths to load services from
    */
   discovery(paths) {
-    if (!Array.isArray(paths)) {
-      paths = [paths]
+    files = recursiveRead(paths)
+
+    if (files.length === 0) {
+      return
     }
 
-    paths.forEach((routePath) => {
-      const modulePath = resolve(routePath)
-      const files = fs.readdirSync(routePath)
-
-      if (files.length === 0) {
-        return
+    files.forEach((file) => {
+      const module = require(`${file.replace('.js', '')}`)
+      if (module.hasOwnProperty('default')) {
+        new module.default(router)
       }
-
-      files.forEach((file) => {
-        const module = require(`${modulePath}/${file.replace('.js', '')}`)
-
-        if (module.hasOwnProperty('default')) {
-          new module.default(this.router)
-        }
-      })
     })
   }
 }
