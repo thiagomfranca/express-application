@@ -64,9 +64,8 @@ export default class ExpressApplication {
     }
 
     this.express.listen(this.options.port, () => {
-      if (process.env.NODE_ENV === 'development') {
-        displayRoutes(app);
-      }
+      if (this.options.debug) displayRoutes(this.express)
+
       console.log(`${this.options.name} listen on ${this.options.port} NODE_ENV ${process.env.NODE_ENV}`)
     })
   }

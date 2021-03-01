@@ -46,7 +46,7 @@ export default class ExpressMiddlewares {
     this.register(bodyParser.json, jsonOpts)
     this.register(bodyParser.urlencoded, { extended: false, limit: '1mb' })
 
-    if (this.options.bugsnag.hasOwnProperty('key')) {
+    if (this.options.bugsnag.hasOwnProperty('key') && this.options.bugsnag.key) {
       const { key, ...bugsnagOptions } = this.options.bugsnag
 
       const bugsnagClient = bugsnag({ apiKey: key, ...bugsnagOptions })
