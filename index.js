@@ -1,8 +1,10 @@
-import fs from 'fs'
-import express from 'express'
-import spdy from 'spdy'
-import ExpressServiceDiscovery from './src/expressServiceDiscovery'
-import ExpressMiddlewares from './src/expressMiddlewares'
+import express from 'express';
+import displayRoutes from 'express-routemap';
+import fs from 'fs';
+import spdy from 'spdy';
+
+import ExpressMiddlewares from './src/expressMiddlewares';
+import ExpressServiceDiscovery from './src/expressServiceDiscovery';
 
 const defaultOptions = {
   name: 'ExpressApplication API',
@@ -62,7 +64,10 @@ export default class ExpressApplication {
     }
 
     this.express.listen(this.options.port, () => {
-      console.log(`${this.options.name} listen on ${this.options.port}`)
+      if (process.env.NODE_ENV === 'development') {
+        displayRoutes(app);
+      }
+      console.log(`${this.options.name} listen on ${this.options.port} NODE_ENV ${process.env.NODE_ENV}`)
     })
   }
 
