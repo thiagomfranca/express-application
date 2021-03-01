@@ -103,6 +103,9 @@ export default class ExampleService {
 
 ## Release History
 
+* 2.4.2
+  * fix dependencies
+
 * 2.4.1
   * release new artifacts
 
