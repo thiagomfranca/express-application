@@ -1,6 +1,6 @@
 {
   "name": "express-application",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "The easy way to make robust apis",
   "homepage": "https://github.com/thiagomfranca/express-application",
   "repository": {
@@ -38,7 +38,7 @@
     "spdy": "^4.0.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
+    "@babel/cli": "^7.13.0",
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.5.5",

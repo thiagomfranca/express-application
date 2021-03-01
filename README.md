@@ -103,6 +103,9 @@ export default class ExampleService {
 
 ## Release History
 
+* 2.4.1
+  * release new artifacts
+
 * 2.4.0
   * show routes list in console on debug mode (development environment)
 
