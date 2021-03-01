@@ -103,8 +103,13 @@ export default class ExampleService {
 
 ## Release History
 
-* 2.2.0
+* 2.4.0
+  * show routes list in console on debug mode (development environment)
+
+* 2.3.0
   * add http/2 support using spdy module
+
+* 2.2.0
   * add csp using helmet content security policy
   * upgrade packs
 
